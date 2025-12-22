@@ -72,10 +72,10 @@ job-portal/
 ---
 
 
-## 
+## ⚙️ Running Locally
 
 
-```bash
+
 ⚙️ Running Locally
 cd backend
 npm install
@@ -88,11 +88,8 @@ npm start
 ---
 
 
----
 
-## 🧠 Project Summary
 
-```md
 ## 🧠 Project Summary
 
 I built a full-stack **Job Portal Web Application** using **React** and **Node.js** with **JWT authentication**.
@@ -132,7 +129,4 @@ Full Stack Developer
 GitHub: https://github.com/RishiVykunta
 
 ---
-git add README.md
-git commit -m "Fix README markdown structure"
-git push
 
