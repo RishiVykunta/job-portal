@@ -1,0 +1,20 @@
+.glass-input {
+  width: 100%;
+  padding: 10px;
+  margin: 12px 0;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+}
+
+.glass-button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+  font-weight: bold;
+}

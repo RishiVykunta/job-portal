@@ -1,0 +1,11 @@
+.apply-button {
+  margin-top: 12px;
+  padding: 8px;
+  width: 100%;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+  font-weight: bold;
+}

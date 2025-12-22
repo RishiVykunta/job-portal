@@ -1,0 +1,65 @@
+
+.admin-card {
+  padding: 40px;
+  border-radius: 22px;
+  width: 90%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+
+.admin-card h2 {
+  margin-bottom: 24px;
+  font-size: 26px;
+  letter-spacing: 0.5px;
+}
+
+
+.admin-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 16px; 
+}
+
+
+.admin-table th {
+  text-align: left;
+  padding: 14px 16px;
+  font-size: 15px;
+  opacity: 0.9;
+}
+
+
+.admin-table td {
+  padding: 18px 16px;   
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  font-size: 15px;
+}
+
+
+.admin-table td:first-child {
+  border-top-left-radius: 14px;
+  border-bottom-left-radius: 14px;
+}
+
+
+.admin-table td:last-child {
+  border-top-right-radius: 14px;
+  border-bottom-right-radius: 14px;
+}
+
+
+.admin-delete-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  background: #ff4d4d;
+  color: white;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.admin-delete-btn:hover {
+  background: #ff2f2f;
+}
