@@ -5,6 +5,18 @@ Built using **React, Node.js, Express, PostgreSQL**, and **JWT Authentication**.
 
 ---
 
+## 🌐 Live Demo & Repository
+
+- **Live Application**:  
+  👉 https://job-portal-frontend-ax4u.onrender.com
+
+- **Backend API**:  
+  👉 https://job-portal-5a1b.onrender.com/api
+
+
+
+---
+
 ## 🚀 Features
 
 ### 👤 Candidate
