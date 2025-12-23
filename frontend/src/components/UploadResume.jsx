@@ -12,7 +12,8 @@ function UploadResume({ jobId }) {
     }
 
     try {
-      await uploadResume(jobId, file);
+     await uploadResume(file);
+
       setMessage("Resume uploaded successfully");
     } catch (err) {
       setMessage(err.message || "Upload failed");

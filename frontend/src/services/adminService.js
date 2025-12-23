@@ -1,12 +1,13 @@
-const API_URL = "http://localhost:5000/api/admin";
+import API_BASE_URL from "../config";
 
+const API_URL = `${API_BASE_URL}/api/admin`;
+
+const getToken = () => localStorage.getItem("token");
 
 export const getAllUsers = async () => {
-  const token = localStorage.getItem("token");
-
   const response = await fetch(`${API_URL}/users`, {
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${getToken()}`,
     },
   });
 
@@ -20,17 +21,12 @@ export const getAllUsers = async () => {
 };
 
 export const deleteUser = async (userId) => {
-  const token = localStorage.getItem("token");
-
-  const response = await fetch(
-    `http://localhost:5000/api/admin/users/${userId}`,
-    {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  const response = await fetch(`${API_URL}/users/${userId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
 
   const data = await response.json();
 
@@ -42,16 +38,11 @@ export const deleteUser = async (userId) => {
 };
 
 export const getAllJobs = async () => {
-  const token = localStorage.getItem("token");
-
-  const response = await fetch(
-    "http://localhost:5000/api/admin/jobs",
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  const response = await fetch(`${API_URL}/jobs`, {
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
 
   const data = await response.json();
 
@@ -62,19 +53,13 @@ export const getAllJobs = async () => {
   return data;
 };
 
-
 export const deleteJob = async (jobId) => {
-  const token = localStorage.getItem("token");
-
-  const response = await fetch(
-    `http://localhost:5000/api/admin/jobs/${jobId}`,
-    {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  const response = await fetch(`${API_URL}/jobs/${jobId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
 
   const data = await response.json();
 
@@ -86,16 +71,11 @@ export const deleteJob = async (jobId) => {
 };
 
 export const getAllApplications = async () => {
-  const token = localStorage.getItem("token");
-
-  const response = await fetch(
-    "http://localhost:5000/api/admin/applications",
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  const response = await fetch(`${API_URL}/applications`, {
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
 
   const data = await response.json();
 

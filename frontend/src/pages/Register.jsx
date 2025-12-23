@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { registerUser } from "../services/authService";
 
 const Register = ({ onSwitchToLogin }) => {
   const [formData, setFormData] = useState({
@@ -21,31 +22,11 @@ const Register = ({ onSwitchToLogin }) => {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await res.json();
-
-      if (res.status === 409) {
-        setError(data.message || "User already exists");
-        setLoading(false);
-        return;
-      }
-
-      if (!res.ok) {
-        setError(data.message || "Registration failed");
-        setLoading(false);
-        return;
-      }
-
+      await registerUser(formData);
       alert("Registration successful! Please login.");
-      onSwitchToLogin(); 
-
-    } catch {
-      setError("Server error. Please try again.");
+      onSwitchToLogin();
+    } catch (err) {
+      setError(err.message || "Registration failed");
     } finally {
       setLoading(false);
     }
@@ -57,9 +38,26 @@ const Register = ({ onSwitchToLogin }) => {
         <h2 className="auth-title">Create Account</h2>
 
         <form onSubmit={handleSubmit}>
-          <input name="name" placeholder="Full Name" onChange={handleChange} required />
-          <input name="email" type="email" placeholder="Email" onChange={handleChange} required />
-          <input name="password" type="password" placeholder="Password" onChange={handleChange} required />
+          <input
+            name="name"
+            placeholder="Full Name"
+            onChange={handleChange}
+            required
+          />
+          <input
+            name="email"
+            type="email"
+            placeholder="Email"
+            onChange={handleChange}
+            required
+          />
+          <input
+            name="password"
+            type="password"
+            placeholder="Password"
+            onChange={handleChange}
+            required
+          />
 
           <select name="role" onChange={handleChange}>
             <option value="candidate">Candidate</option>

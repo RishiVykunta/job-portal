@@ -1,16 +1,17 @@
-const API_URL = "http://localhost:5000/api";
+import API_BASE_URL from "../config";
 
+const API_URL = `${API_BASE_URL}/api`;
 
 const getToken = () => localStorage.getItem("token");
 
-
+/**
+ * FETCH ALL JOBS
+ */
 export const fetchJobs = async () => {
-  const token = localStorage.getItem("token");
-
-  const res = await fetch("http://localhost:5000/api/jobs", {
+  const res = await fetch(`${API_URL}/jobs`, {
     method: "GET",
     headers: {
-      Authorization: `Bearer ${token}`, 
+      Authorization: `Bearer ${getToken()}`,
     },
   });
 
@@ -21,7 +22,9 @@ export const fetchJobs = async () => {
   return res.json();
 };
 
-
+/**
+ * POST JOB (recruiter)
+ */
 export const postJob = async (jobData) => {
   const res = await fetch(`${API_URL}/jobs`, {
     method: "POST",
@@ -36,6 +39,9 @@ export const postJob = async (jobData) => {
   return res.json();
 };
 
+/**
+ * APPLY TO JOB (candidate)
+ */
 export const applyToJob = async (jobId) => {
   const res = await fetch(`${API_URL}/jobs/${jobId}/apply`, {
     method: "POST",
@@ -48,12 +54,14 @@ export const applyToJob = async (jobId) => {
   return res.json();
 };
 
-
-export const uploadResume = async (jobId, file) => {
+/**
+ * UPLOAD RESUME (candidate)
+ */
+export const uploadResume = async (file) => {
   const formData = new FormData();
   formData.append("resume", file);
 
-  const res = await fetch(`${API_URL}/resume/${jobId}`, {
+  const res = await fetch(`${API_URL}/resume/upload`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${getToken()}`,
