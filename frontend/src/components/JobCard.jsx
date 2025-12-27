@@ -1,91 +1,43 @@
-import React from "react";
+import React from 'react';
+import './JobCard.css';
 
-function JobCard({ job, onApply, showApply, alreadyApplied }) {
-  if (!job) return null;
-
+const JobCard = ({ job, onView, onApply, isApplied = false, showActions = true }) => {
   return (
-    <div
-      className="job-card"
-      style={{
-        background: "rgba(255,255,255,0.16)",
-        backdropFilter: "blur(12px)",
-        borderRadius: "18px",
-        padding: "22px 24px",
-        boxShadow: "0 14px 32px rgba(0,0,0,0.18)",
-        color: "white",
-      }}
-    >
-      {/* Title */}
-      <h3 style={{ margin: "0 0 6px", fontSize: "19px" }}>
-        {job.title}
-      </h3>
-
-      {/* Company + Location */}
-      <p
-        style={{
-          margin: "0 0 8px",
-          fontSize: "14px",
-          opacity: 0.9,
-        }}
-      >
-        {job.company} • {job.location}
-      </p>
-
-      {/* Posted date */}
-      <p
-        style={{
-          fontSize: "12.5px",
-          opacity: 0.7,
-          marginBottom: "12px",
-        }}
-      >
-        Posted on:{" "}
-        {job.created_at
-          ? new Date(job.created_at).toLocaleDateString()
-          : "N/A"}
-      </p>
-
-      {/* Description */}
-      {job.description && (
-        <p
-          style={{
-            fontSize: "14px",
-            lineHeight: "1.6",
-            opacity: 0.85,
-            marginBottom: "16px",
-          }}
-        >
-          {job.description}
+    <div className="job-card">
+      <div className="job-card-header">
+        <h3 className="job-title">{job.title}</h3>
+        {isApplied && <span className="applied-badge">Applied</span>}
+      </div>
+      <div className="job-card-body">
+        <p className="job-company">📍 {job.company}</p>
+        <p className="job-location">🏢 {job.location}</p>
+        <p className="job-description">
+          {job.description && job.description.length > 150
+            ? `${job.description.substring(0, 150)}...`
+            : job.description}
         </p>
-      )}
-
-      {/* Apply / Already Applied */}
-      {showApply && (
-        alreadyApplied ? (
-          <button
-            disabled
-            style={{
-              padding: "10px 18px",
-              borderRadius: "10px",
-              border: "none",
-              background: "rgba(255,255,255,0.25)",
-              color: "#ddd",
-              cursor: "not-allowed",
-            }}
-          >
-            Already Applied
+        {job.recruiter_name && (
+          <p className="job-recruiter">Posted by: {job.recruiter_name}</p>
+        )}
+        <p className="job-date">
+          Posted: {new Date(job.created_at).toLocaleDateString()}
+        </p>
+      </div>
+      {showActions && (
+        <div className="job-card-actions">
+          <button className="btn-view" onClick={() => onView(job.id)}>
+            View Details
           </button>
-        ) : (
-          <button
-            className="glass-button"
-            onClick={() => onApply(job.id)}
-          >
-            Apply
-          </button>
-        )
+          {onApply && !isApplied && (
+            <button className="btn-apply" onClick={() => onApply(job.id)}>
+              Apply Now
+            </button>
+          )}
+        </div>
       )}
     </div>
   );
-}
+};
 
 export default JobCard;
+

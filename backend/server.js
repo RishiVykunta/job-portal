@@ -1,62 +1,50 @@
-const express = require("express");
-const cors = require("cors");
-const pool = require("./config/db");
-const authMiddleware = require("./middleware/authMiddleware");
-const resumeRoutes = require("./routes/resumeRoutes");
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
+const { validateEnv } = require('./utils/validateEnv');
+
+try {
+  validateEnv();
+} catch (error) {
+  console.error('Environment validation failed:', error.message);
+  process.exit(1);
+}
 
 const app = express();
 
-(async () => {
-  try {
-    const result = await pool.query("SELECT NOW()");
-    console.log("✅ Database connected at:", result.rows[0].now);
-  } catch (err) {
-    console.error("❌ Database connection failed:", err.message);
-  }
-})();
+app.set('trust proxy', 1);
 
-app.use(
-  cors({
-    origin: "*",
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true,
+}));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-app.use(express.json());
+const authRoutes = require('./routes/authRoutes');
+const jobRoutes = require('./routes/jobRoutes');
+const resumeRoutes = require('./routes/resumeRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
-app.use("/api/auth", require("./routes/authRoutes"));
-app.use("/api/jobs", require("./routes/jobRoutes"));
-app.use("/api/resume", resumeRoutes);
-app.use("/api/admin", require("./routes/adminRoutes"));
+app.use('/api/auth', authRoutes);
+app.use('/api/jobs', jobRoutes);
+app.use('/api/resume', resumeRoutes);
+app.use('/api/admin', adminRoutes);
 
-
-
-app.use("/uploads", express.static("uploads"));
-
-
-app.get("/", (req, res) => {
-  res.send("Job Portal Backend Running");
-});
-
-app.get("/api/protected", authMiddleware, (req, res) => {
+app.get('/api/health', (req, res) => {
   res.json({
-    message: "Access granted",
-    user: req.user,
+    success: true,
+    message: 'Server is running',
+    timestamp: new Date().toISOString(),
   });
 });
 
-
-app.get("/db-test", async (req, res) => {
-  try {
-    const result = await pool.query("SELECT NOW()");
-    res.json(result.rows[0]);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+const errorHandler = require('./middleware/errorHandler');
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
-
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });

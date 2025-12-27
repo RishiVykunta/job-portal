@@ -1,86 +1,105 @@
-import API_BASE_URL from "../config";
-
-const API_URL = `${API_BASE_URL}/api/admin`;
-
-const getToken = () => localStorage.getItem("token");
+import API_URL from '../config/api';
+import { getToken } from '../utils/auth';
 
 export const getAllUsers = async () => {
-  const response = await fetch(`${API_URL}/users`, {
+  const token = getToken();
+  const response = await fetch(`${API_URL}/admin/users`, {
     headers: {
-      Authorization: `Bearer ${getToken()}`,
+      'Authorization': `Bearer ${token}`,
     },
   });
 
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || "Failed to fetch users");
+    throw new Error(data.error?.message || 'Failed to fetch users');
   }
 
   return data;
 };
 
 export const deleteUser = async (userId) => {
-  const response = await fetch(`${API_URL}/users/${userId}`, {
-    method: "DELETE",
+  const token = getToken();
+  const response = await fetch(`${API_URL}/admin/users/${userId}`, {
+    method: 'DELETE',
     headers: {
-      Authorization: `Bearer ${getToken()}`,
+      'Authorization': `Bearer ${token}`,
     },
   });
 
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || "Failed to delete user");
+    throw new Error(data.error?.message || 'Failed to delete user');
   }
 
   return data;
 };
 
 export const getAllJobs = async () => {
-  const response = await fetch(`${API_URL}/jobs`, {
+  const token = getToken();
+  const response = await fetch(`${API_URL}/admin/jobs`, {
     headers: {
-      Authorization: `Bearer ${getToken()}`,
+      'Authorization': `Bearer ${token}`,
     },
   });
 
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || "Failed to fetch jobs");
+    throw new Error(data.error?.message || 'Failed to fetch jobs');
   }
 
   return data;
 };
 
 export const deleteJob = async (jobId) => {
-  const response = await fetch(`${API_URL}/jobs/${jobId}`, {
-    method: "DELETE",
+  const token = getToken();
+  const response = await fetch(`${API_URL}/admin/jobs/${jobId}`, {
+    method: 'DELETE',
     headers: {
-      Authorization: `Bearer ${getToken()}`,
+      'Authorization': `Bearer ${token}`,
     },
   });
 
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || "Failed to delete job");
+    throw new Error(data.error?.message || 'Failed to delete job');
   }
 
   return data;
 };
 
 export const getAllApplications = async () => {
-  const response = await fetch(`${API_URL}/applications`, {
+  const token = getToken();
+  const response = await fetch(`${API_URL}/admin/applications`, {
     headers: {
-      Authorization: `Bearer ${getToken()}`,
+      'Authorization': `Bearer ${token}`,
     },
   });
 
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || "Failed to fetch applications");
+    throw new Error(data.error?.message || 'Failed to fetch applications');
+  }
+
+  return data;
+};
+
+export const getAnalytics = async () => {
+  const token = getToken();
+  const response = await fetch(`${API_URL}/admin/analytics`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error?.message || 'Failed to fetch analytics');
   }
 
   return data;

@@ -1,100 +1,109 @@
-import React, { useState } from "react";
-import { postJob } from "../services/jobService";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { createJob } from '../services/jobService';
+import Button from '../components/Button';
+import Alert from '../components/Alert';
+import './PostJob.css';
 
-function PostJob({ onClose }) {
-  const [title, setTitle] = useState("");
-  const [company, setCompany] = useState("");
-  const [location, setLocation] = useState("");
-  const [description, setDescription] = useState("");
+const PostJob = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    title: '',
+    company: '',
+    location: '',
+    description: '',
+  });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError('');
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
 
     try {
-      await postJob({ title, company, location, description });
-      alert("Job posted successfully");
-      onClose && onClose();
+      await createJob(
+        formData.title,
+        formData.company,
+        formData.location,
+        formData.description
+      );
+      navigate('/recruiter/jobs');
     } catch (err) {
-      alert(err.message || "Failed to post job");
+      setError(err.message || 'Failed to post job');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div
-      style={{
-        maxWidth: "400px",
-        margin: "40px auto",
-        background: "rgba(255,255,255,0.15)",
-        padding: "20px",
-        borderRadius: "12px",
-        backdropFilter: "blur(10px)",
-      }}
-    >
-      <h3 style={{ color: "white", textAlign: "center" }}>
-        Post a Job
-      </h3>
-
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Job Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-          style={{ width: "100%", padding: "10px", marginTop: "10px" }}
-        />
-
-        <input
-          type="text"
-          placeholder="Company"
-          value={company}
-          onChange={(e) => setCompany(e.target.value)}
-          required
-          style={{ width: "100%", padding: "10px", marginTop: "10px" }}
-        />
-
-        <input
-          type="text"
-          placeholder="Location"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          required
-          style={{ width: "100%", padding: "10px", marginTop: "10px" }}
-        />
-
-        <textarea
-          placeholder="Job Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          rows={5}
-          required
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginTop: "10px",
-            borderRadius: "6px",
-            fontFamily: "inherit",
-          }}
-        />
-
-        <button
-          type="submit"
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginTop: "15px",
-            borderRadius: "8px",
-            border: "none",
-            cursor: "pointer",
-            fontWeight: "bold",
-          }}
-        >
-          Post Job
-        </button>
-      </form>
+    <div className="post-job-container">
+      <div className="post-job-card">
+        <h1>Post a New Job</h1>
+        {error && <Alert type="danger" message={error} onClose={() => setError('')} />}
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Job Title</label>
+            <input
+              type="text"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              required
+              placeholder="e.g., Software Engineer"
+            />
+          </div>
+          <div className="form-group">
+            <label>Company</label>
+            <input
+              type="text"
+              name="company"
+              value={formData.company}
+              onChange={handleChange}
+              required
+              placeholder="Company name"
+            />
+          </div>
+          <div className="form-group">
+            <label>Location</label>
+            <input
+              type="text"
+              name="location"
+              value={formData.location}
+              onChange={handleChange}
+              required
+              placeholder="e.g., New York, NY"
+            />
+          </div>
+          <div className="form-group">
+            <label>Description</label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              required
+              rows="10"
+              placeholder="Job description, requirements, responsibilities..."
+            />
+          </div>
+          <div className="form-actions">
+            <Button type="button" variant="secondary" onClick={() => navigate('/recruiter/jobs')}>
+              Cancel
+            </Button>
+            <Button type="submit" disabled={loading}>
+              {loading ? 'Posting...' : 'Post Job'}
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
-}
+};
 
 export default PostJob;
+

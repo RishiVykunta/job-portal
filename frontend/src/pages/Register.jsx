@@ -1,32 +1,49 @@
-import { useState } from "react";
-import { registerUser } from "../services/authService";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { register } from '../services/authService';
+import Button from '../components/Button';
+import Alert from '../components/Alert';
+import './Auth.css';
 
-const Register = ({ onSwitchToLogin }) => {
+const Register = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    role: "candidate",
+    name: '',
+    email: '',
+    password: '',
+    role: 'candidate',
   });
-
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
     setLoading(true);
+    setError('');
 
     try {
-      await registerUser(formData);
-      alert("Registration successful! Please login.");
-      onSwitchToLogin();
+      const response = await register(
+        formData.name,
+        formData.email,
+        formData.password,
+        formData.role
+      );
+      const role = response.data.user.role;
+      
+      if (role === 'admin') {
+        navigate('/admin/dashboard');
+      } else if (role === 'recruiter') {
+        navigate('/recruiter/jobs');
+      } else {
+        navigate('/jobs');
+      }
     } catch (err) {
-      setError(err.message || "Registration failed");
+      setError(err.message || 'Registration failed');
     } finally {
       setLoading(false);
     }
@@ -35,45 +52,56 @@ const Register = ({ onSwitchToLogin }) => {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2 className="auth-title">Create Account</h2>
-
+        <h1>Register</h1>
+        {error && <Alert type="danger" message={error} onClose={() => setError('')} />}
         <form onSubmit={handleSubmit}>
-          <input
-            name="name"
-            placeholder="Full Name"
-            onChange={handleChange}
-            required
-          />
-          <input
-            name="email"
-            type="email"
-            placeholder="Email"
-            onChange={handleChange}
-            required
-          />
-          <input
-            name="password"
-            type="password"
-            placeholder="Password"
-            onChange={handleChange}
-            required
-          />
-
-          <select name="role" onChange={handleChange}>
-            <option value="candidate">Candidate</option>
-            <option value="recruiter">Recruiter</option>
-          </select>
-
-          {error && <p style={{ color: "salmon" }}>{error}</p>}
-
-          <button className="auth-btn" disabled={loading}>
-            {loading ? "Registering..." : "Register"}
-          </button>
+          <div className="form-group">
+            <label>Name</label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+              placeholder="Enter your name"
+            />
+          </div>
+          <div className="form-group">
+            <label>Email</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              placeholder="Enter your email"
+            />
+          </div>
+          <div className="form-group">
+            <label>Password</label>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              minLength={6}
+              placeholder="Enter your password (min 6 characters)"
+            />
+          </div>
+          <div className="form-group">
+            <label>Role</label>
+            <select name="role" value={formData.role} onChange={handleChange} required>
+              <option value="candidate">Candidate</option>
+              <option value="recruiter">Recruiter</option>
+            </select>
+          </div>
+          <Button type="submit" disabled={loading} className="auth-button">
+            {loading ? 'Registering...' : 'Register'}
+          </Button>
         </form>
-
-        <p className="auth-footer">
-          Already have an account?{" "}
-          <span onClick={onSwitchToLogin}>Login</span>
+        <p className="auth-switch">
+          Already have an account? <span onClick={() => navigate('/login')}>Login</span>
         </p>
       </div>
     </div>

@@ -1,15 +1,33 @@
-import API_BASE_URL from "../config";
+import API_URL from '../config/api';
+import { saveToken } from '../utils/auth';
 
-const API_URL = `${API_BASE_URL}/api/auth`;
-
-/**
- * LOGIN USER
- */
-export const loginUser = async (email, password) => {
-  const response = await fetch(`${API_URL}/login`, {
-    method: "POST",
+export const register = async (name, email, password, role) => {
+  const response = await fetch(`${API_URL}/auth/register`, {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ name, email, password, role }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error?.message || 'Registration failed');
+  }
+
+  if (data.data.token) {
+    saveToken(data.data.token);
+  }
+
+  return data;
+};
+
+export const login = async (email, password) => {
+  const response = await fetch(`${API_URL}/auth/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({ email, password }),
   });
@@ -17,28 +35,28 @@ export const loginUser = async (email, password) => {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || "Login failed");
+    throw new Error(data.error?.message || 'Login failed');
+  }
+
+  if (data.data.token) {
+    saveToken(data.data.token);
   }
 
   return data;
 };
 
-/**
- * REGISTER USER
- */
-export const registerUser = async (userData) => {
-  const response = await fetch(`${API_URL}/register`, {
-    method: "POST",
+export const getProfile = async () => {
+  const token = localStorage.getItem('job_portal_token');
+  const response = await fetch(`${API_URL}/auth/profile`, {
     headers: {
-      "Content-Type": "application/json",
+      'Authorization': `Bearer ${token}`,
     },
-    body: JSON.stringify(userData),
   });
 
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || "Registration failed");
+    throw new Error(data.error?.message || 'Failed to get profile');
   }
 
   return data;

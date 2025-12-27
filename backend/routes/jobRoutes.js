@@ -1,44 +1,27 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-
-const authMiddleware = require("../middleware/authMiddleware");
-const authorizeRoles = require("../middleware/authorizeRoles");
-
 const {
+  getJobs,
+  getJobById,
   createJob,
-  getAllJobs,
+  getRecruiterJobs,
   applyToJob,
-  getApplications,
-} = require("../controllers/jobController");
+  getJobApplications,
+  getAppliedJobs,
+} = require('../controllers/jobController');
+const { authenticate } = require('../middleware/authMiddleware');
+const authorizeRoles = require('../middleware/authorizeRoles');
+const { ROLES } = require('../utils/constants');
+const asyncHandler = require('../middleware/asyncHandler');
 
+router.get('/', authenticate, asyncHandler(getJobs));
+router.get('/:id', authenticate, asyncHandler(getJobById));
 
-router.post(
-  "/",
-  authMiddleware,
-  authorizeRoles("recruiter"),
-  createJob
-);
+router.get('/applied/list', authenticate, authorizeRoles(ROLES.CANDIDATE), asyncHandler(getAppliedJobs));
+router.post('/:id/apply', authenticate, authorizeRoles(ROLES.CANDIDATE), asyncHandler(applyToJob));
 
-
-router.get(
-  "/",
-  authMiddleware,
-  getAllJobs
-);
-
-router.post(
-  "/:id/apply",
-  authMiddleware,
-  authorizeRoles("candidate"),
-  applyToJob
-);
-
-
-router.get(
-  "/applications",
-  authMiddleware,
-  authorizeRoles("recruiter"),
-  getApplications
-);
+router.post('/', authenticate, authorizeRoles(ROLES.RECRUITER), asyncHandler(createJob));
+router.get('/recruiter/my-jobs', authenticate, authorizeRoles(ROLES.RECRUITER), asyncHandler(getRecruiterJobs));
+router.get('/:id/applications', authenticate, authorizeRoles(ROLES.RECRUITER), asyncHandler(getJobApplications));
 
 module.exports = router;

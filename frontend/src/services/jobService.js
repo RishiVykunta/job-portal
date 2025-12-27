@@ -1,74 +1,131 @@
-import API_BASE_URL from "../config";
+import API_URL from '../config/api';
+import { getToken } from '../utils/auth';
 
-const API_URL = `${API_BASE_URL}/api`;
+export const getJobs = async (page = 1, limit = 10, search = '') => {
+  const token = getToken();
+  const queryParams = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+    ...(search && { search }),
+  });
 
-const getToken = () => localStorage.getItem("token");
-
-/**
- * FETCH ALL JOBS
- */
-export const fetchJobs = async () => {
-  const res = await fetch(`${API_URL}/jobs`, {
-    method: "GET",
+  const response = await fetch(`${API_URL}/jobs?${queryParams}`, {
     headers: {
-      Authorization: `Bearer ${getToken()}`,
+      'Authorization': `Bearer ${token}`,
     },
   });
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch jobs");
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error?.message || 'Failed to fetch jobs');
   }
 
-  return res.json();
+  return data;
 };
 
-/**
- * POST JOB (recruiter)
- */
-export const postJob = async (jobData) => {
-  const res = await fetch(`${API_URL}/jobs`, {
-    method: "POST",
+export const getJobById = async (id) => {
+  const token = getToken();
+  const response = await fetch(`${API_URL}/jobs/${id}`, {
     headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${getToken()}`,
+      'Authorization': `Bearer ${token}`,
     },
-    body: JSON.stringify(jobData),
   });
 
-  if (!res.ok) throw new Error("Failed to post job");
-  return res.json();
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error?.message || 'Failed to fetch job');
+  }
+
+  return data;
 };
 
-/**
- * APPLY TO JOB (candidate)
- */
+export const createJob = async (title, company, location, description) => {
+  const token = getToken();
+  const response = await fetch(`${API_URL}/jobs`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({ title, company, location, description }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error?.message || 'Failed to create job');
+  }
+
+  return data;
+};
+
+export const getRecruiterJobs = async () => {
+  const token = getToken();
+  const response = await fetch(`${API_URL}/jobs/recruiter/my-jobs`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error?.message || 'Failed to fetch jobs');
+  }
+
+  return data;
+};
+
 export const applyToJob = async (jobId) => {
-  const res = await fetch(`${API_URL}/jobs/${jobId}/apply`, {
-    method: "POST",
+  const token = getToken();
+  const response = await fetch(`${API_URL}/jobs/${jobId}/apply`, {
+    method: 'POST',
     headers: {
-      Authorization: `Bearer ${getToken()}`,
+      'Authorization': `Bearer ${token}`,
     },
   });
 
-  if (!res.ok) throw new Error("Failed to apply");
-  return res.json();
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error?.message || 'Failed to apply to job');
+  }
+
+  return data;
 };
 
-/**
- * UPLOAD RESUME (candidate)
- */
-export const uploadResume = async (file) => {
-  const formData = new FormData();
-  formData.append("resume", file);
-
-  const res = await fetch(`${API_URL}/resume/upload`, {
-    method: "POST",
+export const getAppliedJobs = async () => {
+  const token = getToken();
+  const response = await fetch(`${API_URL}/jobs/applied/list`, {
     headers: {
-      Authorization: `Bearer ${getToken()}`,
+      'Authorization': `Bearer ${token}`,
     },
-    body: formData,
   });
 
-  if (!res.ok) throw new Error("Resume upload failed");
-  return res.json();
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error?.message || 'Failed to fetch applied jobs');
+  }
+
+  return data;
+};
+
+export const getJobApplications = async (jobId) => {
+  const token = getToken();
+  const response = await fetch(`${API_URL}/jobs/${jobId}/applications`, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error?.message || 'Failed to fetch applications');
+  }
+
+  return data;
 };

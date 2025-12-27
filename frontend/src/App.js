@@ -1,124 +1,118 @@
-import React, { useState, useEffect } from "react";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Jobs from "./pages/Jobs";
-import AdminDashboard from "./pages/AdminDashboard";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { isAuthenticated, getRoleFromToken } from './utils/auth';
+import { ROLES } from './utils/constants';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Jobs from './pages/Jobs';
+import JobDetails from './pages/JobDetails';
+import CandidateDashboard from './pages/CandidateDashboard';
+import RecruiterJobs from './pages/RecruiterJobs';
+import PostJob from './pages/PostJob';
+import AdminDashboard from './pages/AdminDashboard';
+import './App.css';
 
-
-const getRoleFromToken = () => {
-  const token = localStorage.getItem("token");
-  if (!token) return null;
-
-  try {
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    return payload.role;
-  } catch {
-    return null;
+const ProtectedRoute = ({ children, allowedRoles = [] }) => {
+  if (!isAuthenticated()) {
+    return <Navigate to="/login" replace />;
   }
+
+  const userRole = getRoleFromToken();
+  if (allowedRoles.length > 0 && !allowedRoles.includes(userRole)) {
+    return <Navigate to="/jobs" replace />;
+  }
+
+  return children;
+};
+
+const PublicRoute = ({ children }) => {
+  if (isAuthenticated()) {
+    const role = getRoleFromToken();
+    if (role === ROLES.ADMIN) {
+      return <Navigate to="/admin/dashboard" replace />;
+    } else if (role === ROLES.RECRUITER) {
+      return <Navigate to="/recruiter/jobs" replace />;
+    } else {
+      return <Navigate to="/jobs" replace />;
+    }
+  }
+  return children;
 };
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [role, setRole] = useState(null);
-  const [showLogin, setShowLogin] = useState(true);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setIsLoggedIn(true);
-      setRole(getRoleFromToken());
-    }
-  }, []);
-
-  
-  if (isLoggedIn) {
-   
-    if (role === "admin") {
-      return (
-        <div className="app-container">
-          <AdminDashboard />
-
-          <button
-            style={{
-              marginTop: "30px",
-              padding: "12px 24px",
-              borderRadius: "10px",
-              border: "none",
-              cursor: "pointer",
-              display: "block",
-              marginLeft: "auto",
-              marginRight: "auto",
-            }}
-            onClick={() => {
-              localStorage.removeItem("token");
-              setIsLoggedIn(false);
-              setRole(null);
-            }}
-          >
-            Logout
-          </button>
-        </div>
-      );
-    }
-
-    
-    return (
-      <div className="app-container">
-        <Jobs role={role} />
-
-        <button
-          style={{
-            marginTop: "30px",
-            padding: "12px 24px",
-            borderRadius: "10px",
-            border: "none",
-            cursor: "pointer",
-            display: "block",
-            marginLeft: "auto",
-            marginRight: "auto",
-          }}
-          onClick={() => {
-            localStorage.removeItem("token");
-            setIsLoggedIn(false);
-            setRole(null);
-          }}
-        >
-          Logout
-        </button>
-      </div>
-    );
-  }
-
-  
   return (
-    <div className="app-container">
-      {showLogin ? (
-        <Login
-          onLogin={() => {
-            setIsLoggedIn(true);
-            setRole(getRoleFromToken());
-          }}
-        />
-      ) : (
-        <Register onSwitchToLogin={() => setShowLogin(true)} />
-
-      )}
-
-      <p
-        style={{
-          color: "white",
-          marginTop: "22px",
-          cursor: "pointer",
-          textAlign: "center",
-          fontSize: "15px",
-        }}
-        onClick={() => setShowLogin(!showLogin)}
-      >
-        {showLogin
-          ? "Don't have an account? Register"
-          : "Already have an account? Login"}
-      </p>
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <PublicRoute>
+                <Register />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/jobs"
+            element={
+              <ProtectedRoute allowedRoles={[ROLES.CANDIDATE, ROLES.RECRUITER, ROLES.ADMIN]}>
+                <Jobs />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/jobs/:id"
+            element={
+              <ProtectedRoute allowedRoles={[ROLES.CANDIDATE, ROLES.RECRUITER, ROLES.ADMIN]}>
+                <JobDetails />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/candidate/dashboard"
+            element={
+              <ProtectedRoute allowedRoles={[ROLES.CANDIDATE]}>
+                <CandidateDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/recruiter/jobs"
+            element={
+              <ProtectedRoute allowedRoles={[ROLES.RECRUITER]}>
+                <RecruiterJobs />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/recruiter/post-job"
+            element={
+              <ProtectedRoute allowedRoles={[ROLES.RECRUITER]}>
+                <PostJob />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/" element={<Navigate to="/jobs" replace />} />
+          <Route path="*" element={<Navigate to="/jobs" replace />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

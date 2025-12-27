@@ -1,0 +1,59 @@
+.candidate-dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.candidate-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.candidate-header h1 {
+  color: white;
+  font-size: 36px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.dashboard-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.section-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 30px;
+}
+
+.section-card h2 {
+  color: white;
+  font-size: 24px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.no-applications {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 16px;
+  padding: 40px;
+}
+
+.applied-jobs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+

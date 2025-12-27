@@ -1,11 +1,114 @@
-.apply-button {
-  margin-top: 12px;
-  padding: 8px;
-  width: 100%;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  background: rgba(255, 255, 255, 0.25);
-  color: white;
-  font-weight: bold;
+.job-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
 }
+
+.job-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.job-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.job-title {
+  color: white;
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.applied-badge {
+  background: rgba(25, 135, 84, 0.8);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.job-card-body {
+  margin-bottom: 20px;
+}
+
+.job-company {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 18px;
+  font-weight: 500;
+  margin: 8px 0;
+}
+
+.job-location {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 16px;
+  margin: 8px 0;
+}
+
+.job-description {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 12px 0;
+}
+
+.job-recruiter {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  margin: 8px 0;
+}
+
+.job-date {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  margin: 8px 0;
+}
+
+.job-card-actions {
+  display: flex;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-view {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-view:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.btn-apply {
+  background: rgba(255, 255, 255, 0.95);
+  color: #000;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-apply:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+

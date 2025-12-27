@@ -1,64 +1,82 @@
-import React, { useState } from "react";
-import GlassCard from "../components/GlassCard";
-import { loginUser } from "../services/authService";
-import "./Login.css";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { login } from '../services/authService';
+import Button from '../components/Button';
+import Alert from '../components/Alert';
+import './Auth.css';
 
-function Login({ onLogin }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+const Login = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = async () => {
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError('');
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
     try {
-      setError("");
-      const data = await loginUser(email, password);
-
-      localStorage.setItem("token", data.token);
-      onLogin(); 
+      const response = await login(formData.email, formData.password);
+      const role = response.data.user.role;
+      
+      if (role === 'admin') {
+        navigate('/admin/dashboard');
+      } else if (role === 'recruiter') {
+        navigate('/recruiter/jobs');
+      } else {
+        navigate('/jobs');
+      }
     } catch (err) {
-      setError(err.message);
+      setError(err.message || 'Login failed');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <GlassCard>
-      <h2 style={{ marginBottom: "20px", textAlign: "center" }}>
-        Login
-      </h2>
-
-      <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-        <input
-          type="email"
-          placeholder="Email"
-          className="glass-input"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-
-        <input
-          type="password"
-          placeholder="Password"
-          className="glass-input"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        {error && (
-          <p style={{ color: "salmon", textAlign: "center", margin: 0 }}>
-            {error}
-          </p>
-        )}
-
-        <button
-          className="glass-button"
-          style={{ marginTop: "10px" }}
-          onClick={handleLogin}
-        >
-          Login
-        </button>
+    <div className="auth-container">
+      <div className="auth-card">
+        <h1>Login</h1>
+        {error && <Alert type="danger" message={error} onClose={() => setError('')} />}
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Email</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              placeholder="Enter your email"
+            />
+          </div>
+          <div className="form-group">
+            <label>Password</label>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              placeholder="Enter your password"
+            />
+          </div>
+          <Button type="submit" disabled={loading} className="auth-button">
+            {loading ? 'Logging in...' : 'Login'}
+          </Button>
+        </form>
+        <p className="auth-switch">
+          Don't have an account? <span onClick={() => navigate('/register')}>Register</span>
+        </p>
       </div>
-    </GlassCard>
+    </div>
   );
-}
+};
 
 export default Login;

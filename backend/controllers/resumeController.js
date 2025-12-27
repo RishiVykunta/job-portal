@@ -1,67 +1,110 @@
-const pool = require("../config/db");
-const path = require("path");
-const fs = require("fs");
+const pool = require('../config/db');
+const asyncHandler = require('../middleware/asyncHandler');
+const path = require('path');
+const fs = require('fs');
 
-
-exports.uploadResume = async (req, res) => {
-  try {
-    if (req.user.role !== "candidate") {
-      return res
-        .status(403)
-        .json({ message: "Only candidates can upload resume" });
-    }
-
-    if (!req.file) {
-      return res
-        .status(400)
-        .json({ message: "No file uploaded" });
-    }
-
-    const resumePath = req.file.path;
-
-    await pool.query(
-      "UPDATE users SET resume_path = $1 WHERE id = $2",
-      [resumePath, req.user.id]
-    );
-
-    res.json({ message: "Resume uploaded successfully" });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+const uploadResume = asyncHandler(async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({
+      success: false,
+      error: {
+        message: 'No file uploaded',
+      },
+    });
   }
-};
 
-exports.downloadResume = async (req, res) => {
-  try {
-    if (req.user.role !== "recruiter") {
-      return res
-        .status(403)
-        .json({ message: "Only recruiters can download resumes" });
-    }
+  const resumePath = req.file.path;
 
-    const { userId } = req.params;
+  await pool.query('UPDATE users SET resume_path = $1 WHERE id = $2', [
+    resumePath,
+    req.user.id,
+  ]);
 
-    const result = await pool.query(
-      "SELECT resume_path FROM users WHERE id = $1",
-      [userId]
-    );
+  res.json({
+    success: true,
+    data: {
+      resume_path: resumePath,
+    },
+    message: 'Resume uploaded successfully',
+  });
+});
 
-    if (result.rows.length === 0 || !result.rows[0].resume_path) {
-      return res
-        .status(404)
-        .json({ message: "Resume not found" });
-    }
+const downloadResume = asyncHandler(async (req, res) => {
+  const { userId } = req.params;
 
-    const resumePath = result.rows[0].resume_path;
-    const absolutePath = path.resolve(resumePath);
+  const result = await pool.query('SELECT resume_path, name FROM users WHERE id = $1', [userId]);
 
-    if (!fs.existsSync(absolutePath)) {
-      return res
-        .status(404)
-        .json({ message: "File does not exist" });
-    }
-
-    res.download(absolutePath);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+  if (result.rows.length === 0) {
+    return res.status(404).json({
+      success: false,
+      error: {
+        message: 'User not found',
+      },
+    });
   }
+
+  const resumePath = result.rows[0].resume_path;
+  const userName = result.rows[0].name;
+
+  if (!resumePath || !fs.existsSync(resumePath)) {
+    return res.status(404).json({
+      success: false,
+      error: {
+        message: 'Resume not found',
+      },
+    });
+  }
+
+  res.download(resumePath, `${userName}_resume.pdf`, (err) => {
+    if (err) {
+      console.error('Error downloading resume:', err);
+      if (!res.headersSent) {
+        res.status(500).json({
+          success: false,
+          error: {
+            message: 'Error downloading resume',
+          },
+        });
+      }
+    }
+  });
+});
+
+const getResumePreview = asyncHandler(async (req, res) => {
+  const userId = req.user.role === 'admin' ? req.query.userId : req.user.id;
+
+  const result = await pool.query('SELECT resume_path FROM users WHERE id = $1', [userId]);
+
+  if (result.rows.length === 0 || !result.rows[0].resume_path) {
+    return res.status(404).json({
+      success: false,
+      error: {
+        message: 'Resume not found',
+      },
+    });
+  }
+
+  const resumePath = result.rows[0].resume_path;
+
+  if (!fs.existsSync(resumePath)) {
+    return res.status(404).json({
+      success: false,
+      error: {
+        message: 'Resume file not found',
+      },
+    });
+  }
+
+  res.json({
+    success: true,
+    data: {
+      resume_path: resumePath,
+    },
+  });
+});
+
+module.exports = {
+  uploadResume,
+  downloadResume,
+  getResumePreview,
 };
