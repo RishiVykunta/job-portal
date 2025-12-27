@@ -67,6 +67,35 @@ NODE_ENV=development
 REACT_APP_API_URL=http://localhost:5000/api
 ```
 
+## Production Deployment
+
+### Important: Environment Variables
+
+When deploying to production (e.g., Render, Vercel, Netlify), make sure to set the following environment variables:
+
+#### Backend Environment Variables
+- `DATABASE_URL` - Your production PostgreSQL connection string
+- `JWT_SECRET` - A secure random string for JWT token signing
+- `PORT` - Port number (usually set automatically by hosting provider)
+- `FRONTEND_URL` - Your frontend URL (e.g., `https://job-portal-frontend-c4f2.onrender.com`)
+- `NODE_ENV=production`
+
+#### Frontend Environment Variables
+- `REACT_APP_API_URL` - Your backend API URL (e.g., `https://your-backend.onrender.com/api`)
+
+**⚠️ Critical**: If `REACT_APP_API_URL` is not set in production, the frontend will try to connect to `http://localhost:5000/api`, which will fail and cause network errors.
+
+### Render Deployment Example
+
+1. **Backend Service**:
+   - Set `FRONTEND_URL` to your frontend URL
+   - Set `DATABASE_URL` to your PostgreSQL database URL
+   - Set `JWT_SECRET` to a secure random string
+
+2. **Frontend Service**:
+   - Set `REACT_APP_API_URL` to `https://your-backend-service.onrender.com/api`
+   - Make sure to use `https://` (not `http://`) for production
+
 ## Quick Start
 
 ### Backend
