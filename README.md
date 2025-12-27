@@ -6,7 +6,14 @@ Full-stack job portal application built with React, Node.js, Express, and Postgr
 
 - **Frontend:**([https://job-portal-frontend-c4f2.onrender.com](https://job-portal-frontend-c4f2.onrender.com))
 - ⚠️ First request may take up to 30 seconds due to free-tier cold start.
-  
+
+  ## File Uploads (Resume Storage)
+- **Issue**: Render's filesystem is ephemeral - uploaded files will be lost on redeploy
+- **Solution Options**:
+  1. **Use Cloud Storage** :
+     - Integrate AWS S3, Cloudinary, or similar service
+     - Update `backend/config/multer.js` to use cloud storage
+       
 ## Features
 
 ### 👤 Candidate
