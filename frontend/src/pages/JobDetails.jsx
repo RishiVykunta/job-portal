@@ -95,10 +95,32 @@ const JobDetails = () => {
             <span className="detail-label">Location:</span>
             <span className="detail-value">{job.location}</span>
           </div>
+          {job.salary && (
+            <div className="detail-row">
+              <span className="detail-label">Salary:</span>
+              <span className="detail-value">{job.salary}</span>
+            </div>
+          )}
+          {job.applicant_count !== undefined && job.applicant_count !== null && (
+            <div className="detail-row">
+              <span className="detail-label">Applicants:</span>
+              <span className="detail-value">
+                {job.applicant_count} {job.applicant_count === 1 ? 'Applicant' : 'Applicants'}
+              </span>
+            </div>
+          )}
           {job.recruiter_name && (
             <div className="detail-row">
               <span className="detail-label">Posted by:</span>
               <span className="detail-value">{job.recruiter_name}</span>
+            </div>
+          )}
+          {job.recruiter_email && (
+            <div className="detail-row">
+              <span className="detail-label">Recruiter Email:</span>
+              <span className="detail-value">
+                <a href={`mailto:${job.recruiter_email}`}>{job.recruiter_email}</a>
+              </span>
             </div>
           )}
           <div className="detail-row">
@@ -112,6 +134,13 @@ const JobDetails = () => {
             <h3>Description</h3>
             <p className="job-description">{job.description}</p>
           </div>
+
+          {job.skills_required && (
+            <div className="job-skills-section">
+              <h3>Skills Required</h3>
+              <p className="job-skills">{job.skills_required}</p>
+            </div>
+          )}
 
           {role === ROLES.CANDIDATE && (
             <div className="apply-section">

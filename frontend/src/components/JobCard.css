@@ -19,6 +19,8 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .job-title {
@@ -26,10 +28,21 @@
   font-size: 22px;
   font-weight: 600;
   margin: 0;
+  flex: 1;
+  min-width: 200px;
 }
 
 .applied-badge {
   background: rgba(25, 135, 84, 0.8);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.applicant-count-badge {
+  background: rgba(13, 110, 253, 0.8);
   color: white;
   padding: 6px 12px;
   border-radius: 6px;

@@ -32,6 +32,8 @@ const PublicRoute = ({ children }) => {
       return <Navigate to="/admin/dashboard" replace />;
     } else if (role === ROLES.RECRUITER) {
       return <Navigate to="/recruiter/jobs" replace />;
+    } else if (role === ROLES.CANDIDATE) {
+      return <Navigate to="/candidate/dashboard" replace />;
     } else {
       return <Navigate to="/jobs" replace />;
     }

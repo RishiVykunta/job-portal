@@ -40,7 +40,7 @@ const Register = () => {
       } else if (role === 'recruiter') {
         navigate('/recruiter/jobs');
       } else {
-        navigate('/jobs');
+        navigate('/candidate/dashboard');
       }
     } catch (err) {
       setError(err.message || 'Registration failed');
@@ -89,7 +89,7 @@ const Register = () => {
               placeholder="Enter your password (min 6 characters)"
             />
           </div>
-          <div className="form-group">
+          <div className="form-group role-select-group">
             <label>Role</label>
             <select name="role" value={formData.role} onChange={handleChange} required>
               <option value="candidate">Candidate</option>

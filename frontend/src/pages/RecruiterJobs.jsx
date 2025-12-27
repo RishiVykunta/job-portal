@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getRecruiterJobs, getJobApplications } from '../services/jobService';
+import { getRecruiterJobs, getJobApplications, deleteRecruiterJob } from '../services/jobService';
 import { downloadResume } from '../services/resumeService';
 import { removeToken } from '../utils/auth';
 import JobCard from '../components/JobCard';
@@ -17,6 +17,7 @@ const RecruiterJobs = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showApplications, setShowApplications] = useState(false);
+  const [deleting, setDeleting] = useState(null);
 
   useEffect(() => {
     loadJobs();
@@ -43,6 +44,23 @@ const RecruiterJobs = () => {
       setShowApplications(true);
     } catch (err) {
       alert(err.message || 'Failed to load applications');
+    }
+  };
+
+  const handleDeleteJob = async (jobId) => {
+    if (!window.confirm('Are you sure you want to delete this job? This action cannot be undone.')) {
+      return;
+    }
+
+    setDeleting(jobId);
+    try {
+      await deleteRecruiterJob(jobId);
+      loadJobs();
+      setError('');
+    } catch (err) {
+      setError(err.message || 'Failed to delete job');
+    } finally {
+      setDeleting(null);
     }
   };
 
@@ -82,14 +100,23 @@ const RecruiterJobs = () => {
             <div className="jobs-list">
               {jobs.map((job) => (
                 <div key={job.id} className="job-item">
-                  <JobCard job={job} showActions={false} />
-                  <Button
-                    onClick={() => handleViewApplications(job.id)}
-                    variant="secondary"
-                    className="view-applications-btn"
-                  >
-                    View Applications
-                  </Button>
+                  <JobCard job={job} showActions={false} applicantCount={job.applicant_count} />
+                  <div className="job-actions">
+                    <Button
+                      onClick={() => handleViewApplications(job.id)}
+                      variant="secondary"
+                      className="view-applications-btn"
+                    >
+                      View Applications ({job.applicant_count || 0})
+                    </Button>
+                    <Button
+                      onClick={() => handleDeleteJob(job.id)}
+                      variant="danger"
+                      disabled={deleting === job.id}
+                    >
+                      {deleting === job.id ? 'Deleting...' : 'Delete Job'}
+                    </Button>
+                  </div>
                 </div>
               ))}
             </div>

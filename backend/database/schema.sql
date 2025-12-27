@@ -19,6 +19,8 @@ CREATE TABLE jobs (
     company VARCHAR(255) NOT NULL,
     location VARCHAR(255),
     description TEXT,
+    salary VARCHAR(255),
+    skills_required TEXT,
     recruiter_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

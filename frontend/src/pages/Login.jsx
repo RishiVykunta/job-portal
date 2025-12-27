@@ -30,7 +30,7 @@ const Login = () => {
       } else if (role === 'recruiter') {
         navigate('/recruiter/jobs');
       } else {
-        navigate('/jobs');
+        navigate('/candidate/dashboard');
       }
     } catch (err) {
       setError(err.message || 'Login failed');

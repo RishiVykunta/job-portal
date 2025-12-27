@@ -85,6 +85,11 @@ const Jobs = () => {
       <div className="jobs-header">
         <h1>Job Portal</h1>
         <div className="header-actions">
+          {role === ROLES.CANDIDATE && (
+            <Button onClick={() => navigate('/candidate/dashboard')} variant="secondary">
+              My Dashboard
+            </Button>
+          )}
           {role === ROLES.RECRUITER && (
             <Button onClick={() => navigate('/recruiter/jobs')} variant="secondary">
               My Jobs
@@ -121,6 +126,7 @@ const Jobs = () => {
               onApply={role === ROLES.CANDIDATE ? handleApply : null}
               isApplied={appliedJobIds.has(job.id)}
               showActions={true}
+              applicantCount={job.applicant_count}
             />
           ))
         )}

@@ -8,6 +8,7 @@ const {
   applyToJob,
   getJobApplications,
   getAppliedJobs,
+  deleteRecruiterJob,
 } = require('../controllers/jobController');
 const { authenticate } = require('../middleware/authMiddleware');
 const authorizeRoles = require('../middleware/authorizeRoles');
@@ -23,5 +24,6 @@ router.post('/:id/apply', authenticate, authorizeRoles(ROLES.CANDIDATE), asyncHa
 router.post('/', authenticate, authorizeRoles(ROLES.RECRUITER), asyncHandler(createJob));
 router.get('/recruiter/my-jobs', authenticate, authorizeRoles(ROLES.RECRUITER), asyncHandler(getRecruiterJobs));
 router.get('/:id/applications', authenticate, authorizeRoles(ROLES.RECRUITER), asyncHandler(getJobApplications));
+router.delete('/recruiter/:id', authenticate, authorizeRoles(ROLES.RECRUITER), asyncHandler(deleteRecruiterJob));
 
 module.exports = router;

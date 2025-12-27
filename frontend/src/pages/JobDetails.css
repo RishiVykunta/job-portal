@@ -64,6 +64,17 @@
   flex: 1;
 }
 
+.detail-value a {
+  color: #4dabf7;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.detail-value a:hover {
+  color: #74c0fc;
+  text-decoration: underline;
+}
+
 .job-description-section {
   margin-top: 30px;
   padding-top: 30px;

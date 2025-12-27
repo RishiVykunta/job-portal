@@ -12,6 +12,8 @@ const PostJob = () => {
     company: '',
     location: '',
     description: '',
+    salary: '',
+    skills_required: '',
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -31,7 +33,9 @@ const PostJob = () => {
         formData.title,
         formData.company,
         formData.location,
-        formData.description
+        formData.description,
+        formData.salary,
+        formData.skills_required
       );
       navigate('/recruiter/jobs');
     } catch (err) {
@@ -77,7 +81,7 @@ const PostJob = () => {
               value={formData.location}
               onChange={handleChange}
               required
-              placeholder="e.g., New York, NY"
+              placeholder="e.g., Bangalore, Karnataka"
             />
           </div>
           <div className="form-group">
@@ -89,6 +93,26 @@ const PostJob = () => {
               required
               rows="10"
               placeholder="Job description, requirements, responsibilities..."
+            />
+          </div>
+          <div className="form-group">
+            <label>Salary</label>
+            <input
+              type="text"
+              name="salary"
+              value={formData.salary}
+              onChange={handleChange}
+              placeholder="e.g., ₹5,00,000 - ₹7,00,000 per year"
+            />
+          </div>
+          <div className="form-group">
+            <label>Skills Required</label>
+            <textarea
+              name="skills_required"
+              value={formData.skills_required}
+              onChange={handleChange}
+              rows="4"
+              placeholder="e.g., JavaScript, React, Node.js, SQL, Communication skills..."
             />
           </div>
           <div className="form-actions">

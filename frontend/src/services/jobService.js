@@ -41,7 +41,7 @@ export const getJobById = async (id) => {
   return data;
 };
 
-export const createJob = async (title, company, location, description) => {
+export const createJob = async (title, company, location, description, salary, skills_required) => {
   const token = getToken();
   const response = await fetch(`${API_URL}/jobs`, {
     method: 'POST',
@@ -49,7 +49,7 @@ export const createJob = async (title, company, location, description) => {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
     },
-    body: JSON.stringify({ title, company, location, description }),
+    body: JSON.stringify({ title, company, location, description, salary, skills_required }),
   });
 
   const data = await response.json();
@@ -125,6 +125,24 @@ export const getJobApplications = async (jobId) => {
 
   if (!response.ok) {
     throw new Error(data.error?.message || 'Failed to fetch applications');
+  }
+
+  return data;
+};
+
+export const deleteRecruiterJob = async (jobId) => {
+  const token = getToken();
+  const response = await fetch(`${API_URL}/jobs/recruiter/${jobId}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error?.message || 'Failed to delete job');
   }
 
   return data;

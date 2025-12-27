@@ -43,7 +43,7 @@ const validateLogin = (email, password) => {
   return errors;
 };
 
-const validateJob = (title, company, location, description) => {
+const validateJob = (title, company, location, description, salary, skillsRequired) => {
   const errors = [];
 
   if (!title || title.trim().length < 3) {
@@ -60,6 +60,14 @@ const validateJob = (title, company, location, description) => {
 
   if (!description || description.trim().length < 10) {
     errors.push('Description must be at least 10 characters');
+  }
+
+  if (salary && salary.trim().length < 2) {
+    errors.push('Salary must be at least 2 characters if provided');
+  }
+
+  if (skillsRequired && skillsRequired.trim().length < 2) {
+    errors.push('Skills required must be at least 2 characters if provided');
   }
 
   return errors;
