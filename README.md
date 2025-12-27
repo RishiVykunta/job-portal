@@ -10,6 +10,8 @@ Built using **React, Node.js, Express, PostgreSQL**, and **JWT Authentication**.
 - **Live Application**:  
   👉 https://job-portal-frontend-ax4u.onrender.com
 
+⚠️ First request may take up to 30 seconds due to free-tier cold start.
+
 - **Backend API**:  
   👉 https://job-portal-5a1b.onrender.com/api
 
