@@ -6,6 +6,8 @@ Full-stack job portal application built with React, Node.js, Express, and Postgr
 
 - **Frontend:**([https://job-portal-frontend-c4f2.onrender.com](https://job-portal-frontend-c4f2.onrender.com))
 - ⚠️ First request may take up to 30 seconds due to free-tier cold start.
+**Demo Credentials:**
+- **Admin:** admin@jobportal.com / admin@123
 
   ## File Uploads (Resume Storage)
 - **Issue**: Render's filesystem is ephemeral - uploaded files will be lost on redeploy
