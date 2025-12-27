@@ -15,7 +15,7 @@ export const register = async (name, email, password, role) => {
     try {
       data = await response.json();
     } catch (jsonError) {
-      throw new Error(`Failed to connect to server. Please check if the backend is running.`);
+      throw new Error(`Failed to connect to server at ${API_URL}/auth/register. Please check if the backend is running and the API URL is correct.`);
     }
 
     if (!response.ok) {
@@ -29,7 +29,7 @@ export const register = async (name, email, password, role) => {
     return data;
   } catch (error) {
     if (error instanceof TypeError && error.message.includes('fetch')) {
-      throw new Error('Network error: Unable to connect to the server. Please check your connection and ensure the backend is running.');
+      throw new Error(`Network error: Unable to connect to the server at ${API_URL}/auth/register. Please check your connection and ensure the backend is running. If you're in production, make sure REACT_APP_API_URL is set correctly.`);
     }
     throw error;
   }
@@ -49,7 +49,7 @@ export const login = async (email, password) => {
     try {
       data = await response.json();
     } catch (jsonError) {
-      throw new Error(`Failed to connect to server. Please check if the backend is running.`);
+      throw new Error(`Failed to connect to server at ${API_URL}/auth/login. Please check if the backend is running and the API URL is correct.`);
     }
 
     if (!response.ok) {
@@ -63,7 +63,7 @@ export const login = async (email, password) => {
     return data;
   } catch (error) {
     if (error instanceof TypeError && error.message.includes('fetch')) {
-      throw new Error('Network error: Unable to connect to the server. Please check your connection and ensure the backend is running.');
+      throw new Error(`Network error: Unable to connect to the server at ${API_URL}/auth/login. Please check your connection and ensure the backend is running. If you're in production, make sure REACT_APP_API_URL is set correctly.`);
     }
     throw error;
   }
