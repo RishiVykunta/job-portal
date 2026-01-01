@@ -8,7 +8,7 @@ Full-stack job portal application built with React, Node.js, Express, and Postgr
 - ⚠️ First request may take up to 30 seconds due to free-tier cold start.
   
 **Demo Credentials:**
-- **Admin:** admin@jobportal.com / admin@123
+- **Admin:** admin@example.com / admin@123
 
   ## File Uploads (Resume Storage)
 - **Issue**: Render's filesystem is ephemeral - uploaded files will be lost on redeploy
