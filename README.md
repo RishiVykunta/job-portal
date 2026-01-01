@@ -2,6 +2,21 @@
 
 Full-stack job portal application built with React, Node.js, Express, and PostgreSQL.
 
+## 🌐 Live Demo
+
+- **Frontend:**([https://job-portal-frontend-c4f2.onrender.com](https://job-portal-frontend-c4f2.onrender.com))
+- ⚠️ First request may take up to 30 seconds due to free-tier cold start.
+  
+**Demo Credentials:**
+- **Admin:** admin@jobportal.com / admin@123
+
+  ## File Uploads (Resume Storage)
+- **Issue**: Render's filesystem is ephemeral - uploaded files will be lost on redeploy
+- **Solution Options**:
+  1. **Use Cloud Storage** :
+     - Integrate AWS S3, Cloudinary, or similar service
+     - Update `backend/config/multer.js` to use cloud storage
+       
 ## Features
 
 ### 👤 Candidate
@@ -37,64 +52,10 @@ Full-stack job portal application built with React, Node.js, Express, and Postgr
 - **File Upload**: Multer for PDF resume uploads
 - **Password Hashing**: bcrypt
 
-## Database Setup
 
-1. Create a PostgreSQL database:
-```sql
-CREATE DATABASE job_portal;
-```
 
-2. Run the schema file:
-```bash
-psql -U postgres -d job_portal -f backend/database/schema.sql
-```
 
-Or use your preferred PostgreSQL client to execute `backend/database/schema.sql`.
 
-## Environment Variables
-
-### Backend (.env)
-```
-DATABASE_URL=postgresql://username:password@localhost:5432/job_portal
-JWT_SECRET=your_secret_key_here
-PORT=5000
-FRONTEND_URL=http://localhost:3000
-NODE_ENV=development
-```
-
-### Frontend (.env)
-```
-REACT_APP_API_URL=http://localhost:5000/api
-```
-
-## Production Deployment
-
-### Important: Environment Variables
-
-When deploying to production (e.g., Render, Vercel, Netlify), make sure to set the following environment variables:
-
-#### Backend Environment Variables
-- `DATABASE_URL` - Your production PostgreSQL connection string
-- `JWT_SECRET` - A secure random string for JWT token signing
-- `PORT` - Port number (usually set automatically by hosting provider)
-- `FRONTEND_URL` - Your frontend URL (e.g., `https://job-portal-frontend-c4f2.onrender.com`)
-- `NODE_ENV=production`
-
-#### Frontend Environment Variables
-- `REACT_APP_API_URL` - Your backend API URL (e.g., `https://your-backend.onrender.com/api`)
-
-**⚠️ Critical**: If `REACT_APP_API_URL` is not set in production, the frontend will try to connect to `http://localhost:5000/api`, which will fail and cause network errors.
-
-### Render Deployment Example
-
-1. **Backend Service**:
-   - Set `FRONTEND_URL` to your frontend URL
-   - Set `DATABASE_URL` to your PostgreSQL database URL
-   - Set `JWT_SECRET` to a secure random string
-
-2. **Frontend Service**:
-   - Set `REACT_APP_API_URL` to `https://your-backend-service.onrender.com/api`
-   - Make sure to use `https://` (not `http://`) for production
 
 ## Quick Start
 
